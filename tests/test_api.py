@@ -1,4 +1,4 @@
-from app import app
+from src.api_activity.app import app
 import pytest
 
 @pytest.fixture

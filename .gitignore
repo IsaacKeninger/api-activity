@@ -8,3 +8,12 @@ wheels/
 
 # Virtual environments
 .venv
+
+# Private Key
+myKey.pem
+
+# Private Cert
+MyCertificate.crt
+
+# db
+activity.db

@@ -1,3 +1,4 @@
+from contextlib import closing
 import sqlite3
 
 def connect():
@@ -9,8 +10,8 @@ class Database:
         self.create_users_table()
 
     def create_users_table(self):
-        with self.conn:
-            self.conn.execute("""
+        with self.conn, closing(self.conn.cursor()) as cursor:
+            cursor.execute("""
                 CREATE TABLE IF NOT EXISTS users (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     username TEXT NOT NULL UNIQUE,
@@ -19,8 +20,8 @@ class Database:
 
     def add_user(self, username, hashed_pwd):
         try:
-            with self.conn:
-                self.conn.execute(
+            with self.conn, closing(self.conn.cursor()) as cursor:
+                cursor.execute(
                     "INSERT INTO users (username, password) VALUES (?, ?)",
                     (username, hashed_pwd)
                 )
@@ -29,9 +30,9 @@ class Database:
             return False
 
     def get_password(self, username) -> str:
-        cursor = self.conn.cursor()
-        cursor.execute("SELECT password FROM users WHERE username = ?",
-                       (username,)
-                       )
-        row = cursor.fetchone()
-        return row[0] if row is not None else None
+        with self.conn, closing(self.conn.cursor()) as cursor:
+            cursor.execute("SELECT password FROM users WHERE username = ?",
+                        (username,)
+                        )
+            row = cursor.fetchone()
+            return row[0] if row is not None else None

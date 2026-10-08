@@ -17,3 +17,6 @@ MyCertificate.crt
 
 # db
 activity.db
+
+#vscode
+.vscode

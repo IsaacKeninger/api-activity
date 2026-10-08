@@ -1,11 +1,13 @@
-from flask import Flask, jsonify, request, g
+# AI USAGE: I used Anthropic's Claude briefly for understanding of db.py and SQL queries. However, I did not use it to write any specific code for me. 
+
+from flask import Flask, request, g
 from flask_restful import Resource, Api, reqparse
 from flask_talisman import Talisman
 from api_activity._constants import PROJECT_ROOT
 from api_activity.db import Database
 from flask_bcrypt import Bcrypt
 from functools import wraps
-import os 
+import os
 
 _KEYFILE_PATH = os.path.join(PROJECT_ROOT, "MyKey.pem")
 _CERTIFICATE_PATH = os.path.join(PROJECT_ROOT, "MyCertificate.crt")
@@ -104,7 +106,7 @@ def create_app(with_ssl=True) -> Flask:
     Talisman(app, force_https=True)
     init_api(app)
     @app.teardown_appcontext
-    def close_db(exception):
+    def close_db(exception=None):
         db = g.pop('db', None)
         if db is not None:
             db.conn.close()
